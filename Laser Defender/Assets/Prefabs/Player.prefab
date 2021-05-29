@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 06fd9f12265cb4508a7472aa21daca9b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8d428c71921d946c68b2d137d11c2d37, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,8 +97,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 30
   padding: 0.6
-  health: 300
+  basehealth: 900
   deathSound: {fileID: 8300000, guid: f51df02a90310423ba48c24863e52133, type: 3}
+  lives: 3
   deathSoundVolume: 1
   shootSound: {fileID: 8300000, guid: 7aa205161d3e544cc93e8feaf4ff82d7, type: 3}
   shootSoundVolume: 0.1

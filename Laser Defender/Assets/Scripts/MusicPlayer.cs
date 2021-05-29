@@ -5,9 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class MusicPlayer : MonoBehaviour
 {
+    AudioSource audioSource;
     // Start is called before the first frame update
     void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.volume = OptionController.GetMasterVolume();
         SetUpSingleton();
     }
 
@@ -20,12 +23,12 @@ public class MusicPlayer : MonoBehaviour
         else
         {
             DontDestroyOnLoad(gameObject);
+           
         }
     }
 
-    // Update is called once per frame
-    void Update()
+   public void SetVolume(float volume)
     {
-        
+        audioSource.volume = volume;
     }
 }

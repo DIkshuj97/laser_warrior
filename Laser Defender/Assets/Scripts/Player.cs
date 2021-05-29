@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float padding = 0f;
-    [SerializeField] int health = 200;
+    [SerializeField] int basehealth = 900;
     [SerializeField] AudioClip deathSound;
+    [SerializeField] int lives =5;
     [SerializeField] [Range(0, 1)] float deathSoundVolume = 0.7f;
     [SerializeField] AudioClip shootSound;
     [SerializeField] [Range(0, 1)] float shootSoundVolume = 0.25f;
@@ -20,12 +20,11 @@ public class Player : MonoBehaviour
     [SerializeField] public bool canTripleShot = false;
     [SerializeField] public bool shieldsActive = false;
 
-
+    [Header("Powerups")]
     [SerializeField]  GameObject tripleShotPrefab;
     [SerializeField] GameObject laserPrefab;
     [SerializeField] GameObject shieldGameObject;
     [SerializeField] GameObject Partner;
-
 
     Coroutine firingCoroutine;
 
@@ -33,18 +32,27 @@ public class Player : MonoBehaviour
     float xMax;
     float yMin;
     float yMax;
+    int health;
 
     void Start()
     {
-        SetUpMoveBoundaries();
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            SetUpMoveBoundaries();
+            health = (int)(basehealth - (OptionController.GetDifficulty() * 166));
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Move();
-        Fire();
-        TiltMove();
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            Move();
+            Fire();
+            TiltMove();
+            lives = Mathf.Abs(health / 166);
+        }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -66,8 +74,7 @@ public class Player : MonoBehaviour
         health -= damageDealer.GetDamage();
         damageDealer.Hit();
 
-
-        if (health <= 0)
+        if (health <= 0 && lives==0)
         {
             Die();
         }
@@ -75,14 +82,15 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
+        float deathVolume = Mathf.Clamp(OptionController.GetMasterVolume(), 0f, deathSoundVolume);
         FindObjectOfType<Level>().LoadGameOver();
         Destroy(gameObject);
-        AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position, deathSoundVolume);
+        AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position, deathVolume);
     }
 
-    public int GetHealth()
+    public float GetLives()
     {
-        return health;
+        return lives;
     }
 
     private void Fire()
@@ -100,9 +108,9 @@ public class Player : MonoBehaviour
 
     IEnumerator FireContinuously()
     {
+        float shootVolume = Mathf.Clamp(OptionController.GetMasterVolume(), 0f, shootSoundVolume);
         while (true)
         {
-            
             if (canTripleShot == true)
             {
                GameObject  laser = Instantiate(tripleShotPrefab, transform.position, Quaternion.identity) as GameObject;
@@ -114,14 +122,15 @@ public class Player : MonoBehaviour
                GameObject  laser = Instantiate(laserPrefab, transform.position, Quaternion.identity) as GameObject;
                 laser.GetComponent<Rigidbody2D>().velocity = new Vector2(0, projectileSpeed);
             }
-            AudioSource.PlayClipAtPoint(shootSound, Camera.main.transform.position, shootSoundVolume);
+
+            AudioSource.PlayClipAtPoint(shootSound, Camera.main.transform.position, shootVolume);
             yield return new WaitForSeconds(projectileFiringPeriod);
         }
     }
 
     public void healthpickup()
     {
-        health += 100;
+        health += 150;
     }
 
     public void TripleShotPowerupOn()
@@ -129,7 +138,6 @@ public class Player : MonoBehaviour
         canTripleShot = true;
         StartCoroutine(TripleShotPowerDownRoutine());
     }
-
 
     public IEnumerator TripleShotPowerDownRoutine()
     {
@@ -147,7 +155,6 @@ public class Player : MonoBehaviour
     {
         Instantiate(Partner, transform.position, Quaternion.identity);
     }
-
 
     private void Move()
     {
@@ -180,5 +187,4 @@ public class Player : MonoBehaviour
         yMin = gameCamera.ViewportToWorldPoint(new Vector3(0, 0, 0)).y + padding;
         yMax = gameCamera.ViewportToWorldPoint(new Vector3(0, 1, 0)).y - padding;
     }
-
 }

@@ -18,7 +18,7 @@ public class HealthDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HealthText.text = player.GetHealth().ToString();
+        HealthText.text = player.GetLives().ToString();
 
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,8 +7,10 @@ public class Level : MonoBehaviour
 {
     [SerializeField] float LevelLoadDelay = 2f;
 
+
    public void LoadStartMenu()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(0);
     }
 
@@ -16,6 +18,12 @@ public class Level : MonoBehaviour
     {
         SceneManager.LoadScene("Game");
         FindObjectOfType<GameSession>().ResetGame();
+       
+    }
+
+    public void OptionMenu()
+    {
+        SceneManager.LoadScene("Option Menu");
     }
 
     public void LoadGameOver()

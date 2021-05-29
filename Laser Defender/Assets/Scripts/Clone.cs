@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Clone : MonoBehaviour
 {
-
     [SerializeField] float speed = 3f;
     [SerializeField] GameObject laserPrefab;
     Vector3 direction=Vector3.left;
