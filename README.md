@@ -1,4 +1,4 @@
-# laser_warrior
+# Laser Warrior
 
 Laser Warrior is an action game with space theme. Player can get the score by destroying enemies ship with the laser. 
 There are also different types of pickups like Health, Triple Laser, Shield and clone which help player to increase the score. 
